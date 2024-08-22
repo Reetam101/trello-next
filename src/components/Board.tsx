@@ -1,78 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import Column from "./Column";
-import NewColumnForm from "./forms/NewColumnForm";
+import { RoomProvider } from "@/app/liveblocks.config";
+import { LiveList } from "@liveblocks/client";
+import { ClientSideSuspense } from "@liveblocks/react";
+import Columns from "./Columns";
+import Link from "next/link";
+import { FaCog } from "react-icons/fa";
 
-const defaultColumns = [
-  {
-    id: "col1",
-    name: "todo",
-    index: 0,
-  },
-  {
-    id: "col2",
-    name: "in progress",
-    index: 1,
-  },
-  {
-    id: "col3",
-    name: "done",
-    index: 2,
-  },
-];
-
-export type CardType = {
-  name: string;
-  id: string | number;
-  index: number;
-  columnId: string;
-};
-
-const defaultCards = [
-  {
-    id: "card1",
-    name: "task 1",
-    index: 0,
-    columnId: "col1",
-  },
-  {
-    id: "card2",
-    name: "task 2",
-    index: 1,
-    columnId: "col1",
-  },
-  {
-    id: "card3",
-    name: "task 3",
-    index: 2,
-    columnId: "col2",
-  },
-  {
-    id: "card4",
-    name: "task 4",
-    index: 3,
-    columnId: "col3",
-  },
-];
-
-export default function Board() {
-  const [cards, setCards] = useState(defaultCards);
-  const [columns, setColumns] = useState(defaultColumns);
+export default function Board({ id, name }: { id: string; name: string }) {
   return (
-    <div className="flex gap-4">
-      {columns.map((column) => (
-        <Column
-          key={column.id}
-          {...column}
-          id={column.id}
-          setCards={setCards}
-          cards={cards
-            .sort((a, b) => a.index - b.index)
-            .filter((c) => c.columnId === column.id)}
-        />
-      ))}
-      <NewColumnForm />
-    </div>
+    <RoomProvider
+      id={id}
+      initialPresence={{}}
+      initialStorage={{
+        columns: new LiveList([]),
+        cards: new LiveList([]),
+      }}
+    >
+      <ClientSideSuspense fallback={<p className="text-white">Loading...</p>}>
+        <>
+          <div className="flex gap-2 justify-between items-center mb-4">
+            <h1>Board: {name}</h1>
+            <Link
+              className="flex gap-2 items-center rounded-md px-4 py-2 bg-gray-300 text-gray-950"
+              href={`/boards/${id}/settings`}
+            >
+              <FaCog />
+              Board Settings
+            </Link>
+          </div>
+          <Columns />
+        </>
+      </ClientSideSuspense>
+    </RoomProvider>
   );
 }

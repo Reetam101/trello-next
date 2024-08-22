@@ -5,7 +5,7 @@ function LoginButton() {
   return (
     <button
       onClick={() => signIn("google")}
-      className="bg-gray-300 py-2 px-4 ml-2"
+      className="bg-gray-300 py-2 px-4 ml-2 text-gray-950"
     >
       Login
     </button>

@@ -14,7 +14,7 @@ async function Boards() {
       {rooms?.length > 0 &&
         rooms.map((room) => (
           <Link
-            className="bg-gray-300 border p-4 rounded-md block"
+            className="bg-gray-300 border p-4 rounded-md block text-gray-950"
             href={`/boards/${room.id}`}
             key={room.id}
           >
